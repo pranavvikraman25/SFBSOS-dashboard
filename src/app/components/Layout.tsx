@@ -98,9 +98,8 @@ export function Layout() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 bg-[#111827] flex flex-col z-30 transform transition-all duration-300 ${
-          mobileSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        } ${sidebarOpen ? "w-56" : "lg:w-20 w-56"}`}
+        className={`fixed lg:static inset-y-0 left-0 bg-[#111827] flex flex-col z-30 transform transition-all duration-300 ${mobileSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          } ${sidebarOpen ? "w-56" : "lg:w-20 w-56"}`}
       >
         {/* Logo Section */}
         <div className="p-5 border-b border-[#1F2937]">
@@ -151,10 +150,9 @@ export function Layout() {
                   end={item.to === "/"}
                   onClick={() => setMobileSidebarOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all relative group ${
-                      isActive
-                        ? "bg-[#14532D] text-[#16A34A] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-[#16A34A] before:rounded-r"
-                        : "text-gray-300 hover:bg-[#1F2937] hover:text-white"
+                    `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all relative group ${isActive
+                      ? "bg-[#14532D] text-[#16A34A] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-[#16A34A] before:rounded-r"
+                      : "text-gray-300 hover:bg-[#1F2937] hover:text-white"
                     }`
                   }
                   title={!sidebarOpen ? item.label : ""}
@@ -165,9 +163,8 @@ export function Layout() {
                   </span>
                   {item.badge && (
                     <span
-                      className={`absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full ${
-                        !sidebarOpen && "lg:hidden"
-                      }`}
+                      className={`absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full ${!sidebarOpen && "lg:hidden"
+                        }`}
                     >
                       {item.badge}
                     </span>
@@ -239,7 +236,13 @@ export function Layout() {
               onClick={() => setNotificationOpen(!notificationOpen)}
             >
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+              {notifications.filter(n => n.color === "green").length > 0 || pendingCount > 0 ? (
+                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                  {pendingCount > 0 ? pendingCount : "!"}
+                </span>
+              ) : (
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+              )}
             </button>
             <button
               className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
@@ -250,76 +253,93 @@ export function Layout() {
           </div>
         </div>
 
-        {/* Notifications */}
         {notificationOpen && (
-          <div className="absolute right-6 top-16 bg-white border border-gray-200 shadow-lg rounded-lg w-80 z-20">
-            <div className="p-3 border-b border-gray-200">
-              <h3 className="text-sm font-medium text-gray-900">Notifications</h3>
+          <div className="absolute right-6 top-16 bg-white border border-gray-200 shadow-xl rounded-xl w-80 z-20">
+            <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-gray-900">Notifications</h3>
+              {pendingCount > 0 && (
+                <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded-full">
+                  {pendingCount} new orders
+                </span>
+              )}
             </div>
-            <div className="max-h-60 overflow-y-auto">
+            <div className="max-h-72 overflow-y-auto divide-y divide-gray-100">
               {notifications.map((notification, index) => (
                 <div
                   key={index}
-                  className={`p-3 flex items-center gap-3 ${
-                    index < notifications.length - 1 ? "border-b border-gray-200" : ""
-                  }`}
+                  className="p-3 flex items-start gap-3 hover:bg-gray-50 cursor-pointer"
+                  onClick={() => { setNotificationOpen(false); if (notification.color === "green") navigate("/admin/orders"); }}
                 >
                   <div
-                    className={`w-2 h-2 rounded-full ${
-                      notification.color === "red"
+                    className={`w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0 ${notification.color === "red"
                         ? "bg-red-500"
                         : notification.color === "green"
-                        ? "bg-green-500"
-                        : notification.color === "amber"
-                        ? "bg-amber-500"
-                        : notification.color === "blue"
-                        ? "bg-blue-500"
-                        : "bg-gray-500"
-                    }`}
+                          ? "bg-green-500"
+                          : notification.color === "amber"
+                            ? "bg-amber-500"
+                            : notification.color === "blue"
+                              ? "bg-blue-500"
+                              : "bg-gray-500"
+                      }`}
                   />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 leading-tight">
                       {notification.message}
                     </p>
-                    <p className="text-xs text-gray-500">{notification.time}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{notification.time}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="p-3 text-sm text-gray-500 text-center">
-              <a href="#" className="text-[#16A34A] hover:underline">
-                View all
-              </a>
+            <div className="p-3 border-t border-gray-100 text-center">
+              <button
+                onClick={() => { setNotificationOpen(false); navigate("/admin/orders"); }}
+                className="text-sm text-[#16A34A] font-medium hover:underline"
+              >
+                View all orders →
+              </button>
             </div>
           </div>
         )}
 
         {/* Profile */}
         {profileOpen && (
-          <div className="absolute right-6 top-16 bg-white border border-gray-200 shadow-lg rounded-lg w-80 z-20">
-            <div className="p-3 border-b border-gray-200">
-              <h3 className="text-sm font-medium text-gray-900">Profile</h3>
-            </div>
-            <div className="p-3">
+          <div className="absolute right-6 top-16 bg-white border border-gray-200 shadow-xl rounded-xl w-64 z-20">
+            <div className="p-4 border-b border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-[#16A34A] rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+                <div className="w-10 h-10 bg-[#16A34A] rounded-full flex items-center justify-center text-white font-semibold">
                   RA
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">Ram Agarwal</p>
-                  <p className="text-xs text-gray-500">Owner</p>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">Ram Agarwal</p>
+                  <p className="text-xs text-gray-500">Owner · admin@sfbsos.com</p>
                 </div>
               </div>
             </div>
-            <div className="p-3 text-sm text-gray-500 text-center">
-              <a href="#" className="text-[#16A34A] hover:underline">
-                Edit Profile
-              </a>
-            </div>
-            <div className="p-3 text-sm text-gray-500 text-center">
-              <a href="#" className="text-[#16A34A] hover:underline">
-                Logout
-              </a>
+            <div className="p-2">
+              <button
+                onClick={() => { setProfileOpen(false); navigate("/"); }}
+                className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 rounded-lg flex items-center gap-3"
+              >
+                <Eye className="w-4 h-4" />
+                Switch to Customer View
+              </button>
+              <button
+                onClick={() => { setProfileOpen(false); navigate("/admin/settings"); }}
+                className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 rounded-lg flex items-center gap-3"
+              >
+                <Lock className="w-4 h-4" />
+                Settings
+              </button>
+              <div className="border-t border-gray-100 mt-2 pt-2">
+                <button
+                  onClick={() => { setProfileOpen(false); navigate("/admin/login"); }}
+                  className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 rounded-lg flex items-center gap-3"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         )}

@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router";
-import { Search, ShoppingCart, User } from "lucide-react";
+import { Search, ShoppingCart, User, Package } from "lucide-react";
 import { useCart } from "../context/CartContext";
 
 export function CustomerLayout() {
@@ -34,7 +34,14 @@ export function CustomerLayout() {
             </div>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate("/my-orders")}
+                className="hidden md:flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-[#16A34A] text-sm font-medium border border-gray-200 rounded-lg hover:border-[#16A34A] transition-colors"
+              >
+                <Package className="w-4 h-4" />
+                My Orders
+              </button>
               <button
                 onClick={() => navigate("/customer/auth")}
                 className="hidden md:flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-[#16A34A] text-sm font-medium"
@@ -81,9 +88,10 @@ export function CustomerLayout() {
             <div>
               <h3 className="font-semibold text-gray-900 mb-4">Quick Links</h3>
               <ul className="space-y-2 text-sm text-gray-600">
-                <li><button className="hover:text-[#16A34A]">Browse Fruits</button></li>
-                <li><button className="hover:text-[#16A34A]">Track Order</button></li>
-                <li><button className="hover:text-[#16A34A]">My Orders</button></li>
+                <li><button onClick={() => navigate("/")} className="hover:text-[#16A34A]">Browse Fruits</button></li>
+                <li><button onClick={() => navigate("/my-orders")} className="hover:text-[#16A34A]">Track Order</button></li>
+                <li><button onClick={() => navigate("/my-orders")} className="hover:text-[#16A34A]">My Orders</button></li>
+                <li><button onClick={() => navigate("/admin/login")} className="hover:text-[#16A34A] text-xs text-gray-400">Admin Portal →</button></li>
               </ul>
             </div>
 

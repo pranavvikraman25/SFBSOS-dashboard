@@ -69,11 +69,10 @@ export function CustomerOrders() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as OrderStatus)}
-              className={`flex-1 min-w-[120px] px-6 py-4 text-sm font-medium transition-colors border-b-2 ${
-                activeTab === tab.id
+              className={`flex-1 min-w-[120px] px-6 py-4 text-sm font-medium transition-colors border-b-2 ${activeTab === tab.id
                   ? "text-[#16A34A] border-[#16A34A] bg-[#F0FDF4]"
                   : "text-gray-600 border-transparent hover:text-gray-900 hover:bg-gray-50"
-              }`}
+                }`}
             >
               {tab.label} ({tab.count})
             </button>
@@ -91,21 +90,22 @@ export function CustomerOrders() {
                 <div className="flex flex-wrap items-center gap-3 mb-2">
                   <h3 className="font-bold text-gray-900">{order.id}</h3>
                   <span className="text-gray-500">•</span>
-                  <span className="text-sm text-gray-600">{order.date}</span>
+                  <span className="text-sm text-gray-600">{getTimeAgo(order.createdAt)}</span>
                   <span className="text-gray-500">•</span>
                   <span className="text-lg font-semibold text-gray-900">₹{order.total}</span>
                 </div>
-                <p className="text-sm text-gray-600 mb-3">{order.items}</p>
+                <p className="text-sm text-gray-600 mb-3">
+                  {order.items.map((item) => `${item.fruit} × ${item.qty} ${item.unit}`).join(", ")}
+                </p>
                 <div className="flex flex-wrap items-center gap-2">
                   <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
                     {order.status.toUpperCase()}
                   </span>
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      order.deliveryType === "home" ? "bg-blue-100 text-blue-700" : "bg-purple-100 text-purple-700"
-                    }`}
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${order.type === "home" ? "bg-blue-100 text-blue-700" : "bg-purple-100 text-purple-700"
+                      }`}
                   >
-                    {order.deliveryType === "home" ? "Home Delivery" : "Store Pickup"}
+                    {order.type === "home" ? "Home Delivery" : "Store Pickup"}
                   </span>
                 </div>
               </div>
@@ -163,9 +163,8 @@ export function CustomerOrders() {
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-start gap-3">
                       <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                          item.completed ? "bg-[#16A34A]" : "bg-gray-200"
-                        }`}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${item.completed ? "bg-[#16A34A]" : "bg-gray-200"
+                          }`}
                       >
                         {item.completed && <Check className="w-5 h-5 text-white" />}
                       </div>
@@ -200,7 +199,7 @@ export function CustomerOrders() {
               </div>
 
               {/* Delivery Address */}
-              {selectedOrder.deliveryType === "home" && (
+              {selectedOrder.type === "home" && (
                 <div className="border-t border-gray-200 pt-6">
                   <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                     <MapPin className="w-4 h-4" />

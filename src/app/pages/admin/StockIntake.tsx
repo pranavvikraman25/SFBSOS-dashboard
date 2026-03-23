@@ -1,0 +1,1 @@
+export { StockIntake } from "../StockIntake";
